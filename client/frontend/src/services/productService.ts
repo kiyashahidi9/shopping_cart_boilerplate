@@ -1,20 +1,41 @@
 import axios from "axios";
 import { z } from 'zod'
-import type { NewProductType } from "../types";
+import { cartItemSchema, productSchema, type NewProductType } from "../types";
 const baseURL = 'http://localhost:5001/api'
 
 async function getAllProducts() {
     const { data } = await axios.get(`${baseURL}/products`)
+    const parsed = z.array(productSchema).safeParse(data)
+
+    if (!parsed.success) {
+        console.error('Invalid API response:', parsed.error.issues)
+        return
+    }
+
     return data
 }
 
 async function postNewProduct(newProduct: NewProductType) {
     const { data } = await axios.post(`${baseURL}/products`, newProduct)
+    const parsed = productSchema.safeParse(data)
+
+    if (!parsed.success) {
+        console.error('Invalid API response:', parsed.error.issues)
+        return
+    }
+
     return data
 }
 
 async function updateProduct(newProduct: NewProductType, productId: string) {
     const { data } = await axios.put(`${baseURL}/products/${productId}`, newProduct)
+    const parsed = productSchema.safeParse(data)
+
+    if (!parsed.success) {
+        console.error('Invalid API response:', parsed.error.issues)
+        return
+    }
+
     return data
 }
 
@@ -24,6 +45,12 @@ async function deleteProduct(productId: string) {
 
 async function getCartItems() {
     const { data } = await axios.get(`${baseURL}/cart`)
+    const parsed = z.array(cartItemSchema).safeParse(data)
+
+    if (!parsed.success) {
+        console.error('Invalid API response:', parsed.error.issues)
+    }
+    
     return data
 }
 

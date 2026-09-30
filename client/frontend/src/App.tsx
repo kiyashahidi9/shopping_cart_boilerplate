@@ -11,7 +11,7 @@ import TogglableAddProductForm from "./components/TogglableAddProductForm.tsx"
 function App() {
   const [products, setProducts] = useState<ProductType[]>(mockProducts)
   const [cart, setCart] = useState<CartItemType[]>(mockCart)
-
+  
   // INITIAL RENDER //
 
   // GET PRODUCTS
@@ -80,7 +80,7 @@ function App() {
       if (product._id === updatedProduct._id) {
         return {
           ...product,
-          quantity: product.quantity - 1
+          quantity: product.quantity === 0 ? 0 : product.quantity - 1
         }
       } else {
         return product
